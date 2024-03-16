@@ -1,10 +1,12 @@
-# reading data
+# załadowanie bibliotek i danych
 
 import pandas as pd
 import nltk
 from sklearn import metrics
 
 datasur = pd.read_csv(r'C:\\Users\\gessn\\OneDrive\\Pulpit\\Nauka\\python\\projekt\\labeledtext.csv')
+
+#stworzenie dataframe z próbką danych 1000 sztuk z każdego labelu
 dataright = datasur[datasur['label']=='right']
 dataleft = datasur[datasur['label']=='left']
 dataright=dataright.head(1000)
@@ -39,7 +41,7 @@ for i in range(len(text)):
 
     r = [word for word in r if word not in stopwords.words('english')]
 
-    r = ' '.join(r) #nie do końca rozumiem, dlaczego to jest potrzebne, a nie może być po prostu lista słów
+    r = ' '.join(r) 
 
     corpus.append(r)
 
@@ -86,9 +88,6 @@ lr = LogisticRegression()
 
 lr.fit(X_train_cv, y_train)
 
-
-# transform X_test using CV
-
 X_test_cv = cv.transform(X_test)
 
 # predykcje
@@ -97,7 +96,7 @@ predictions = lr.predict(X_test_cv)
 
 predictions
 
-# confusion matrix
+# stworzenie macierzy z wynikami 
 
 df = pd.DataFrame(metrics.confusion_matrix(y_test,predictions), index=['left','right'], columns=['left','right'])
 print (df)
