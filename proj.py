@@ -4,7 +4,7 @@ import pandas as pd
 import nltk
 from sklearn import metrics
 
-datasur = pd.read_csv(r'C:\\Users\\gessn\\OneDrive\\Pulpit\\Nauka\\python\\projekt\\labeledtext.csv')
+datasur = pd.read_csv(r'labeledtext.csv')
 
 #stworzenie dataframe z próbką danych 1000 sztuk z każdego labelu
 dataright = datasur[datasur['label']=='right']
