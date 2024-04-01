@@ -1,16 +1,16 @@
-# załadowanie bibliotek i danych
+# reading data
 
 import pandas as pd
 import nltk
 from sklearn import metrics
+import os
+import joblib
 
-datasur = pd.read_csv(r'labeledtext.csv')
-
-#stworzenie dataframe z próbką danych 1000 sztuk z każdego labelu
+datasur = pd.read_csv(r'C:\\Users\\gessn\\OneDrive\\Pulpit\\Nauka\\python\\projekt\\labeledtext.csv')
 dataright = datasur[datasur['label']=='right']
 dataleft = datasur[datasur['label']=='left']
-dataright=dataright.head(1000)
-dataleft=dataleft.head(1000)
+dataright=dataright.head(10)
+dataleft=dataleft.head(10)
 data=dataright._append(dataleft)
 data.columns = ['title', 'text', 'label']
 data=data.dropna()
@@ -41,7 +41,7 @@ for i in range(len(text)):
 
     r = [word for word in r if word not in stopwords.words('english')]
 
-    r = ' '.join(r) 
+    r = ' '.join(r) #nie do końca rozumiem, dlaczego to jest potrzebne, a nie może być po prostu lista słów
 
     corpus.append(r)
 
@@ -49,7 +49,7 @@ for i in range(len(text)):
 data["text"]= corpus
 
 data.head()
-print (data.head())
+#print (data.head())
 # stworzenie dwóch setów
 
 X = data['text']
@@ -77,26 +77,33 @@ from sklearn.feature_extraction.text import CountVectorizer
 cv = CountVectorizer()
 
 X_train_cv = cv.fit_transform(X_train) 
+print (X_train_cv)
 
 X_train_cv.shape
 
 # trenowanie
 
 from sklearn.linear_model import LogisticRegression
+# jakie argumenty i wartości do nich przypisane będą odpowiednie?
+lr = LogisticRegression(solver='liblinear', random_state=0)
 
-lr = LogisticRegression()
+lr=lr.fit(X_train_cv, y_train)
+print (lr)
 
-lr.fit(X_train_cv, y_train)
+# transform X_test using CV
 
 X_test_cv = cv.transform(X_test)
+
 
 # predykcje
 
 predictions = lr.predict(X_test_cv)
+predictionsy = lr.predict_proba(X_test_cv)
+print(predictions)
+print (predictionsy)
+#jak zwrócić wartości liczbowe przewidywań?
 
-predictions
-
-# stworzenie macierzy z wynikami 
+# confusion matrix
 
 df = pd.DataFrame(metrics.confusion_matrix(y_test,predictions), index=['left','right'], columns=['left','right'])
 print (df)
@@ -106,3 +113,12 @@ print (df)
 from sklearn.metrics import accuracy_score
 score=accuracy_score(y_test,predictions)
 print (score)
+
+# Create the 'trained_model' folder if it doesn't exist
+if not os.path.exists('trained_model'):
+        os.makedirs('trained_model')
+
+# Save the trained pipeline to the 'trained_model' folder
+pipeline_filename = os.path.join('trained_model', 'lr_predictions.pkl')
+joblib.dump(lr, pipeline_filename)
+print(f"Trained pipeline saved as {pipeline_filename}")
