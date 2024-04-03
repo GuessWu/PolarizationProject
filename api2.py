@@ -6,8 +6,6 @@ from flasgger import Swagger
 
 app = Flask(__name__)
 
-
-
 @app.route('/predict', methods=['POST'])
 def predict():
 
@@ -21,7 +19,7 @@ def predict():
 
 if __name__ == '__main__':
     pipeline_filename = os.path.join('trained_model', 'lr_predictions.pkl')
-    lr = joblib.load(pipeline_filename) # Load "model.pkl"
+    lr = joblib.load(pipeline_filename)
     print ('Model loaded')
 
     app.run(debug=True)
