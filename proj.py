@@ -121,4 +121,5 @@ if not os.path.exists('trained_model'):
 # Save the trained pipeline to the 'trained_model' folder
 pipeline_filename = os.path.join('trained_model', 'lr_predictions.pkl')
 joblib.dump(lr, pipeline_filename)
+joblib.dump(cv, 'count_vectorizer.pkl')
 print(f"Trained pipeline saved as {pipeline_filename}")
