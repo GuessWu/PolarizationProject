@@ -33,7 +33,7 @@ def predict_label(text):
     return prediction[0]
 
 # Endpoint dla przetwarzania danych
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET','POST'])
 def predict():
     data = request.get_json()
     input_text = data['text']
